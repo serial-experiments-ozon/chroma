@@ -1,4 +1,5 @@
 mod assets;
+mod ldtk;
 mod state;
 
 use crate::prelude::*;
@@ -12,14 +13,14 @@ pub fn plugin(app: &mut App) {
     .register_type::<Stats>()
     .register_type::<Player>()
     .register_timer::<StepsTimer>()
-    .add_plugins((assets::plugin, state::plugin))
+    .add_plugins((assets::plugin, state::plugin, ldtk::plugin))
     .add_systems(
       Update,
       (spawn, steps.run_if(in_state(Game::Gameplay))).in_set(AppSystems::Spawn),
     );
 }
 
-#[derive(Component, Reflect)]
+#[derive(Component, Reflect, Default, Clone)]
 #[require(Stats)]
 pub struct Player;
 

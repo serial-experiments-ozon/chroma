@@ -23,6 +23,7 @@ pub use bevy::{
 pub use {
   avian2d::prelude::*,
   bevy_asset_loader::prelude::*,
+  bevy_ecs_ldtk::prelude::*,
   leafwing_input_manager::{
     InputControlKind,
     prelude::{ActionState, *},

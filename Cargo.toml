@@ -23,6 +23,7 @@ leafwing-input-manager = { version = "0.19", default-features = false, features 
     "gamepad",
     "picking",
 ] }
+bevy_ecs_ldtk = { version = "0.13", features = ["derive"] }
 
 # overrides
 tracing = { version = "0.1", features = [
@@ -32,7 +33,7 @@ tracing = { version = "0.1", features = [
 
 
 [patch.crates-io]
-iyes_progress = { git = "https://github.com/miZyind/iyes_progress", branch = "main" }
+# iyes_progress = { git = "https://github.com/miZyind/iyes_progress", branch = "main" }
 
 [features]
 default = ["dev_native"]

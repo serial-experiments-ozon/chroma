@@ -1,9 +1,13 @@
 mod camera;
+mod ground;
+pub mod ldtk;
 
 use crate::{
   actors::{Enemy, Player, enemy},
   prelude::*,
 };
+
+pub use ground::GroundDetection;
 
 pub fn plugin(app: &mut App) {
   app.register_type::<LevelAssets>();
@@ -13,7 +17,7 @@ pub fn plugin(app: &mut App) {
       .load_collection::<LevelAssets>(),
   );
 
-  app.add_plugins((camera::plugin));
+  app.add_plugins((camera::plugin, ldtk::plugin, ground::plugin));
 }
 
 // todo!> find better name
@@ -28,11 +32,12 @@ pub struct Obstacle;
 #[require(Visibility, Transform)]
 pub struct Level {}
 
-pub fn spawn_level(mut commands: Commands, level_assets: Res<LevelAssets>) {
+pub fn spawn_level(mut commands: Commands, assets: Res<LevelAssets>) {
+  let ldtk_handle = LdtkProjectHandle::from(assets.level.clone());
   commands
     .spawn((Name::new("Level"), DespawnOnExit(Game::Gameplay), Level {}))
-    .insert(children![
-      (Name::new("Player"), Player),
-      // (Name::new("Gameplay Music"), music(level_assets.music.clone()))
-    ]);
+    .insert(LdtkWorldBundle { ldtk_handle, ..Default::default() })
+    .with_children(|parent| {
+      // parent.spawn((Name::new("Player"), Player));
+    });
 }

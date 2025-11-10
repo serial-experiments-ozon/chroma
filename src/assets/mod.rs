@@ -18,6 +18,8 @@ pub struct CreditsAssets {
 pub struct LevelAssets {
   #[asset(path = "audio/music/Fluffing A Duck.ogg")]
   pub music: Handle<AudioSource>,
+  #[asset(path = "levels/sandbox.ldtk")]
+  pub level: Handle<LdtkProject>,
 }
 
 #[derive(AssetCollection, Resource, Reflect)]
