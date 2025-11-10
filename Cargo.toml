@@ -1,0 +1,97 @@
+[package]
+name = "chroma"
+authors = ["uselessgoddess <dodickgod@gmail.com>"]
+version = "0.0.0"
+edition = "2024"
+
+[dependencies]
+# general
+rand = "0.9"
+
+# bevy
+bevy = { version = "0.17", features = [] }
+avian2d = { version = "0.4", default-features = false, features = [
+    "2d",
+    "f32",
+    "parry-f32",
+] }
+seldom = { package = "seldom_state", version = "0.15" }
+bevy_asset_loader = { git = "https://github.com/NiklasEi/bevy_asset_loader", branch = "bevy_main" }
+leafwing-input-manager = { version = "0.19", default-features = false, features = [
+    "mouse",
+    "keyboard",
+    "gamepad",
+    "picking",
+] }
+
+# overrides
+tracing = { version = "0.1", features = [
+    "max_level_debug",
+    "release_max_level_warn",
+] }
+
+
+[patch.crates-io]
+iyes_progress = { git = "https://github.com/miZyind/iyes_progress", branch = "main" }
+
+[features]
+default = ["dev_native"]
+dev = [
+    # Improve compile times for dev builds by linking Bevy as a dynamic library.
+    "bevy/dynamic_linking",
+    "bevy/bevy_dev_tools",
+    "bevy/bevy_ui_debug",
+    # Helps to track math errors
+    "bevy/glam_assert",
+    # Improve error messages coming from Bevy
+    "bevy/track_location",
+    "avian2d/debug-plugin",
+    "avian2d/diagnostic_ui",
+]
+native = ["avian2d/parallel"]
+dev_native = [
+    "dev", "native",
+    # Enable asset hot reloading for native dev builds.
+    "bevy/file_watcher",
+    # Enable embedded asset hot reloading for native dev builds.
+    "bevy/embedded_watcher",
+]
+trace = ["bevy/trace", "bevy/trace_tracy"]
+
+
+[package.metadata.bevy_cli.release]
+# Disable dev features for release builds.
+default-features = false
+
+[lints.rust]
+# Mark `bevy_lint` as a valid `cfg`, as it is set when the Bevy linter runs.
+unexpected_cfgs = { level = "warn", check-cfg = ["cfg(bevy_lint)"] }
+
+[lints.clippy]
+# Bevy supplies arguments to systems via dependency injection, so it's natural for systems to
+# request more than 7 arguments, which would undesirably trigger this lint.
+too_many_arguments = "allow"
+# Queries may access many components, which would undesirably trigger this lint.
+type_complexity = "allow"
+# Make sure macros use their standard braces, such as `[]` for `bevy_ecs::children!`.
+nonstandard_macro_braces = "warn"
+
+# You can configure the warning levels of Bevy lints here. For a list of all lints, see:
+# <https://thebevyflock.github.io/bevy_cli/bevy_lint/lints/>
+[package.metadata.bevy_lint]
+# panicking_methods = "deny"
+# pedantic = "warn"
+
+[profile.dev]
+opt-level = 1
+
+[profile.dev.package."*"]
+opt-level = 3
+
+# Remove expensive debug assertions due to <https://github.com/bevyengine/bevy/issues/14291>
+[profile.dev.package.wgpu-types]
+debug-assertions = false
+
+[profile.release]
+codegen-units = 1
+lto = "thin"
