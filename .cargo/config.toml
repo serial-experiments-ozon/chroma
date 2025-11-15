@@ -6,6 +6,12 @@ rustflags = [
   "-Zthreads=0",
 ]
 
+[target.x86_64-pc-windows-gnu]
+rustflags = [
+  "-Zshare-generics=off",
+  "-Zthreads=0",
+]
+
 [target.x86_64-unknown-linux-gnu]
 linker = "clang"
 rustflags = [

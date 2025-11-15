@@ -15,15 +15,23 @@ avian2d = { version = "0.4", default-features = false, features = [
     "f32",
     "parry-f32",
 ] }
-seldom = { package = "seldom_state", version = "0.15" }
+seldom = { package = "seldom_state", version = "0.15", features = [
+    "leafwing_input"
+] }
 bevy_asset_loader = { git = "https://github.com/NiklasEi/bevy_asset_loader", branch = "bevy_main" }
-leafwing-input-manager = { version = "0.19", default-features = false, features = [
+leafwing-input-manager = { version = "0.18", default-features = false, features = [
     "mouse",
     "keyboard",
     "gamepad",
     "picking",
 ] }
 bevy_ecs_ldtk = { version = "0.13", features = ["derive"] }
+
+# Editor egui
+egui = { version = "0.33", optional = true }
+egui_dock = { version = "0.18.0", optional = true }
+bevy_egui = { version = "0.38", optional = true }
+bevy-inspector-egui = { version = "0.35", optional = true }
 
 # overrides
 tracing = { version = "0.1", features = [
@@ -43,7 +51,7 @@ dev = [
     "bevy/bevy_dev_tools",
     "bevy/bevy_ui_debug",
     # Helps to track math errors
-    "bevy/glam_assert",
+    # "bevy/glam_assert", -- or breaks everything
     # Improve error messages coming from Bevy
     "bevy/track_location",
     "avian2d/debug-plugin",
@@ -51,12 +59,13 @@ dev = [
 ]
 native = ["avian2d/parallel"]
 dev_native = [
-    "dev", "native",
+    "dev", "native", "editor",
     # Enable asset hot reloading for native dev builds.
     "bevy/file_watcher",
     # Enable embedded asset hot reloading for native dev builds.
     "bevy/embedded_watcher",
 ]
+editor = ["egui", "egui_dock", "bevy_egui", "bevy-inspector-egui"]
 trace = ["bevy/trace", "bevy/trace_tracy"]
 
 
@@ -84,7 +93,7 @@ nonstandard_macro_braces = "warn"
 # pedantic = "warn"
 
 [profile.dev]
-opt-level = 1
+opt-level = 3
 
 [profile.dev.package."*"]
 opt-level = 3

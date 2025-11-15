@@ -12,7 +12,7 @@ impl RegisterTimer for App {
     self.register_type::<T>();
     self.add_systems(
       Update,
-      tick::<T>.in_set(PausableSystems).in_set(AppSystems::TickTimers),
+      tick::<T>.in_set(PausableSystems).in_set(Systems::Timers),
     );
     self
   }

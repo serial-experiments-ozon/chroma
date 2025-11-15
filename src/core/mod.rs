@@ -1,4 +1,5 @@
 pub mod audio;
+pub mod cache;
 mod debug;
 mod dev;
 pub mod ecs;
@@ -10,12 +11,12 @@ pub mod ysort;
 use crate::prelude::*;
 
 pub use {
-    audio::{Music, SoundEffect, music, sound_effect, sound_effect_with},
-    debug::{D, in_debug},
-    ecs::{PausableSystems, Pause, Transform2D, Transform2DSystems},
-    physics::{Control, Controller, ControllerInputsSet, ControllerSystemSet},
-    timer::{LazyTimer, RegisterTimer},
-    ysort::{BACKGROUND_OFFSET, YSort},
+  audio::{Music, SoundEffect, music, sound_effect, sound_effect_with},
+  debug::{D, in_debug},
+  ecs::{PausableSystems, Pause, Transform2D, Transform2DSystems},
+  physics::{Control, Controller, ControllerInputsSet, ControllerSystemSet},
+  timer::{LazyTimer, RegisterTimer},
+  ysort::{BACKGROUND_OFFSET, YSort},
 };
 
 pub(crate) use timer::background_timer;
@@ -37,10 +38,11 @@ pub fn plugin(app: &mut App) {
   app.configure_sets(
     Update,
     (
-      AppSystems::Spawn,
-      AppSystems::TickTimers,
-      AppSystems::RecordInput,
-      AppSystems::Update,
+      Systems::Spawn,
+      Systems::Timers,
+      Systems::Input,
+      Systems::Update,
+      Systems::Watch,
     )
       .chain()
       .in_set(PausableSystems),
@@ -57,13 +59,27 @@ pub struct PrimaryCamera;
 #[derive(
   SystemSet, Debug, Clone, Copy, Eq, PartialEq, Hash, PartialOrd, Ord,
 )]
-pub enum AppSystems {
+pub enum Systems {
   /// Spawn systems
   Spawn,
   /// Tick timers
-  TickTimers,
+  Timers,
   /// Record player input
-  RecordInput,
-  /// Do everything
+  Input,
+  /// Process game logic
   Update,
+  /// Systems that prefer to be `Trigger`, but not
+  Watch,
+}
+
+#[derive(PhysicsLayer, Default)]
+pub enum Layers {
+  #[default]
+  Default,
+  //
+  PlayerHurtbox,
+  PlayerCollider,
+  // all terrain types, gotta be separate for casters though
+  Terrain,
+  Platform,
 }

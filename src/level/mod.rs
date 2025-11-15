@@ -7,7 +7,7 @@ use crate::{
   prelude::*,
 };
 
-pub use ground::GroundDetection;
+pub use ground::GroundDetector;
 
 pub fn plugin(app: &mut App) {
   app.register_type::<LevelAssets>();
@@ -38,6 +38,8 @@ pub fn spawn_level(mut commands: Commands, assets: Res<LevelAssets>) {
     .spawn((Name::new("Level"), DespawnOnExit(Game::Gameplay), Level {}))
     .insert(LdtkWorldBundle { ldtk_handle, ..Default::default() })
     .with_children(|parent| {
-      // parent.spawn((Name::new("Player"), Player));
+      //parent
+      //  .spawn((Name::new("Player"), Player))
+      //  .insert(Transform2D::from_xy(10.0, 0.0));
     });
 }

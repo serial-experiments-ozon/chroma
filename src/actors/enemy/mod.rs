@@ -6,7 +6,7 @@ pub fn plugin(app: &mut App) {
   app.add_plugins((
     // boid::plugin,
   ));
-  app.add_systems(Update, spawn.in_set(AppSystems::Spawn));
+  app.add_systems(Update, spawn.in_set(Systems::Spawn));
 }
 
 #[derive(Component, Reflect)]

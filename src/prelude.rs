@@ -32,6 +32,16 @@ pub use {
   std::collections::VecDeque,
 };
 
+// `seldom` prelude
+pub use seldom::{
+  StateMachinePlugin,
+  prelude::{
+    AnyState, EntityState, EntityTrigger, NotState, OneOfState, StateMachine,
+    Trans, done, on_message,
+  },
+  trigger,
+};
+
 pub use crate::{
   assets::{CreditsAssets, InteractionAssets, LevelAssets, StepsAssets},
   core::*,

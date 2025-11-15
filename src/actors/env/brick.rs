@@ -1,7 +1,7 @@
 use crate::{level::Obstacle, prelude::*};
 
 pub fn plugin(app: &mut App) {
-  app.add_systems(Update, spawn.in_set(AppSystems::Spawn));
+  app.add_systems(Update, spawn.in_set(Systems::Spawn));
 }
 
 #[derive(Component)]

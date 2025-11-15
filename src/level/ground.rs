@@ -1,23 +1,26 @@
 use crate::prelude::*;
 
 pub fn plugin(app: &mut App) {
-  app.add_systems(Update, (spawn_sensor, detection, update));
+  app
+    .register_type::<GroundSensor>()
+    .register_type::<GroundDetector>()
+    .add_systems(Update, (spawn_sensor, detection, update));
 }
 
-#[derive(Component)]
+#[derive(Component, Reflect)]
 pub struct GroundSensor {
   pub entity: Entity,
   pub intersection: HashSet<Entity>,
 }
 
-#[derive(Clone, Default, Component)]
-pub struct GroundDetection {
-  pub on_ground: bool,
+#[derive(Component, Reflect, Clone, Default)]
+pub struct GroundDetector {
+  pub ground: bool,
 }
 
 pub fn spawn_sensor(
   mut commands: Commands,
-  detect_ground_for: Query<(Entity, &Collider), Added<GroundDetection>>,
+  detect_ground_for: Query<(Entity, &Collider), Added<GroundDetector>>,
 ) {
   for (entity, collider) in &detect_ground_for {
     if let Some(cuboid) = collider.shape().as_cuboid() {
@@ -74,13 +77,13 @@ pub fn detection(
 }
 
 pub fn update(
-  mut detectors: Query<&mut GroundDetection>,
+  mut detectors: Query<&mut GroundDetector>,
   sensors: Query<&GroundSensor, Changed<GroundSensor>>,
 ) {
   for sensor in &sensors {
     if let Ok(mut detection) = detectors.get_mut(sensor.entity) {
       // todo! maybe its better to use `On` instead or couple
-      detection.on_ground = !sensor.intersection.is_empty();
+      detection.ground = !sensor.intersection.is_empty();
     }
   }
 }

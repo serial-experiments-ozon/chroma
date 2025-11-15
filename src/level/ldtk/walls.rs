@@ -170,7 +170,13 @@ pub fn spawn_wall_collision(
                   * grid_size as f32
                   / 2.,
               ))
-              .insert(GlobalTransform::default());
+              .insert(GlobalTransform::default())
+              // todo! make merged tiles more funny
+              .insert(CollisionLayers::new(
+                Layers::Terrain,
+                [Layers::PlayerCollider],
+              ))
+            ;
           }
         });
       }

@@ -20,6 +20,8 @@ impl Plugin for GamePlugin {
       LoadingState::new(Game::Loading).continue_to_state(Game::Title),
     );
 
+    app.add_plugins(StateMachinePlugin::default());
+
     app.add_plugins((ui::plugin, level::plugin, actors::plugin));
     app.add_systems(Startup, spawn_camera);
   }

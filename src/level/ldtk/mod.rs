@@ -23,13 +23,13 @@ pub fn plugin(app: &mut App) {
 }
 
 fn update_level_selection(
-  levels: Query<(&LevelIid, &Transform2D), Without<Player>>,
-  players: Query<&Transform2D, With<Player>>,
+  levels: Query<(&LevelIid, &Transform), Without<Player>>,
+  players: Query<&Transform, With<Player>>,
   mut selection: ResMut<LevelSelection>,
   ldtk: Single<&LdtkProjectHandle>,
   ldtk_assets: Res<Assets<LdtkProject>>,
 ) {
-  for (level_iid, Transform2D { translation, .. }) in &levels {
+  for (level_iid, Transform { translation, .. }) in &levels {
     if let Some(ldtk) = ldtk_assets.get(*ldtk) {
       let level = ldtk
         .get_raw_level_by_iid(&level_iid.to_string())
@@ -43,7 +43,7 @@ fn update_level_selection(
         ),
       };
 
-      for Transform2D { translation, .. } in &players {
+      for Transform { translation, .. } in &players {
         if translation.x < bounds.max.x
           && translation.x > bounds.min.x
           && translation.y < bounds.max.y
